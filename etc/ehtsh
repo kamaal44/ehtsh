@@ -65,6 +65,64 @@ then
       echo -e
       exit
 
+elif [[ "$1" = "--update" || "$1" = "-u" ]]
+then
+if [[ -d /data/data/com.termux ]]
+then
+if [[ -f /data/data/com.termux/files/usr/bin/ehtsh ]]
+then
+UPD="true"
+else
+UPD="false"
+fi
+else
+if [[ -f /usr/local/bin/ehtsh ]]
+then
+UPD="true"
+else
+UPD="false"
+fi
+fi
+{
+ASESR="$( curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//' )"
+} &> /dev/null
+if [[ "$ASESR" = "" ]]
+then 
+sleep 1
+echo -e "["$RS"*"$CE"] "$RS"Download failed!"$CE""
+sleep 1
+exit
+fi
+if [[ $EUID -ne 0 ]]
+then
+sleep 1
+echo -e "["$RS"*"$CE"] "$RS"Permission denied!"$CE""
+sleep 1
+exit
+fi
+sleep 1
+echo -e "Installing update...\033[0m"
+{
+cd ~
+cd ~/ehtsh
+chmod +x uninstall.sh
+./uninstall.sh
+cd ~
+git clone https://github.com/entynetproject/ehtsh.git
+if [[ "$UPD" != "true" ]]
+then
+sleep 0
+else
+cd ~/ehtsh
+chmod +x install.sh
+./install.sh
+fi
+cd ~
+} &> /dev/null
+echo -e "Successfully updated!\033[0m"
+sleep 1
+exit
+
 elif [[ "$1" = "--labels" || "$1" = "-l" ]]
 then
 if [[ $2 = "" ]]
