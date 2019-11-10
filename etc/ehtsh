@@ -101,7 +101,7 @@ sleep 1
 exit
 fi
 sleep 1
-echo -e "Installing update...\033[0m"
+echo -e "["$YS"inf"$CE"] "$YS" Installing update..."$CE""
 {
 cd ~
 cd ~/ehtsh
@@ -119,7 +119,7 @@ chmod +x install.sh
 fi
 cd ~
 } &> /dev/null
-echo -e "Successfully updated!\033[0m"
+echo -e "["$YS"inf"$CE"] "$YS" Successfully updated..."$CE""
 sleep 1
 exit
 
