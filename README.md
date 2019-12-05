@@ -97,7 +97,7 @@
     alpine  | The macOS alpine theme.
     entynet | Entynet panel theme.
 
-# Ehtsh MIT license
+# Ehtools shell license
  
     MIT License
 
