@@ -22,9 +22,73 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-if [[ -d ~/ehtsh ]]
+if [[ "$1" = "--update" || "$1" = "-u" ]]
+then
+if [[ -d /data/data/com.termux ]]
+then
+if [[ -f /data/data/com.termux/files/usr/bin/ehtsh ]]
+then
+UPD="true"
+else
+UPD="false"
+fi
+else
+if [[ -f /usr/local/bin/ehtsh ]]
+then
+UPD="true"
+else
+UPD="false"
+fi
+fi
+{
+ASESR="$( curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//' )"
+} &> /dev/null
+if [[ "$ASESR" = "" ]]
+then 
+sleep 1
+echo -e "["$RS"*"$CE"] "$RS"Download failed!"$CE""
+sleep 1
+exit
+fi
+if [[ $EUID -ne 0 ]]
+then
+sleep 1
+echo -e "["$RS"*"$CE"] "$RS"Permission denied!"$CE""
+sleep 1
+exit
+fi
+sleep 1
+echo -e "["$YS"inf"$CE"] "$YS" Installing update..."$CE""
+{
+cd ~
+cd ~/ehtsh
+chmod +x uninstall.sh
+./uninstall.sh
+cd ~
+git clone https://github.com/entynetproject/ehtsh.git
+if [[ "$UPD" != "true" ]]
 then
 sleep 0
+else
+cd ~/ehtsh
+chmod +x install.sh
+./install.sh
+fi
+cd ~
+} &> /dev/null
+echo -e "["$YS"inf"$CE"] "$YS" Successfully updated..."$CE""
+sleep 1
+exit
+fi
+
+cd ~
+if [[ -d ~/ehtsh ]]
+then
+{
+cd ~/ehtsh
+} &> /dev/null
+chmod +x ehtsh
+./ehtsh $1 $2 $3 $4 $5 $6 $7 $8 $9
 else
 {
 ASESR="$( curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//' )"
@@ -33,13 +97,14 @@ if [[ "$ASESR" != "" ]]
 then 
 cd ~
 {
-git clone https://github.com/entynetproject/ehtsh.git
+git clone https://github.com/entynetproject/mouse.git
+cd ~/ehtsh
 } &> /dev/null
+chmod +x ehtsh
+./ehtsh $1 $2 $3 $4 $5 $6 $7 $8 $9
 else
-sleep 0
+cd ~
+sleep 1
 exit
 fi
 fi
-
-chmod +x ~/ehtsh/ehtsh
-~/ehtsh/ehtsh $1 $2 $3 $4 $5 $6 $7 $8 $9
