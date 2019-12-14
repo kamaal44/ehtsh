@@ -26,24 +26,6 @@ RS="\033[1;31"
 CE="\033[0m"
 YS="\033[1;33m"
 
-if [[ -d ~/ehtsh ]]
-then
-sleep 0
-else
-{
-ASESR="$( timeout -s SIGTERM 40 curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//' )"
-} &> /dev/null
-if [[ "$ASESR" != "" ]]
-then 
-cd ~
-{
-git clone https://github.com/entynetproject/ehtsh.git
-} &> /dev/null
-else
-sleep 0
-fi
-fi
-
 if [[ "$1" = "--help" || "$1" = "-h" ]]
 then
       echo -e """
@@ -69,63 +51,12 @@ then
       echo -e
       exit
 
-elif [[ "$1" = "--update" || "$1" = "-u" ]]
+elif [[ "$1" = "-u" || "$1" = "--update" ]]
 then
-if [[ -d /data/data/com.termux ]]
-then
-if [[ -f /data/data/com.termux/files/usr/bin/ehtsh ]]
-then
-UPD="true"
-else
-UPD="false"
-fi
-else
-if [[ -f /usr/local/bin/ehtsh ]]
-then
-UPD="true"
-else
-UPD="false"
-fi
-fi
-{
-ASESR="$( curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//' )"
-} &> /dev/null
-if [[ "$ASESR" = "" ]]
-then 
-sleep 1
-echo -e "["$RS"*"$CE"] "$RS"Download failed!"$CE""
-sleep 1
+chmod +x bin/ehtsh
+bin/ehtsh -u
 exit
 fi
-if [[ $EUID -ne 0 ]]
-then
-sleep 1
-echo -e "["$RS"*"$CE"] "$RS"Permission denied!"$CE""
-sleep 1
-exit
-fi
-sleep 1
-echo -e "["$YS"inf"$CE"] "$YS" Installing update..."$CE""
-{
-cd ~
-cd ~/ehtsh
-chmod +x uninstall.sh
-./uninstall.sh
-cd ~
-git clone https://github.com/entynetproject/ehtsh.git
-if [[ "$UPD" != "true" ]]
-then
-sleep 0
-else
-cd ~/ehtsh
-chmod +x install.sh
-./install.sh
-fi
-cd ~
-} &> /dev/null
-echo -e "["$YS"inf"$CE"] "$YS" Successfully updated..."$CE""
-sleep 1
-exit
 
 elif [[ "$1" = "--labels" || "$1" = "-l" ]]
 then
@@ -137,7 +68,7 @@ if [[ $2 = "" ]]
   if [[ "$2" = "disable" ]]
   then
   printf '\033]2;Disabling...\a'
-  if [[ -d ~/ehtsh/.disabled ]]
+  if [[ -d etc/.disabled ]]
   then
   sleep 3
   echo -e "Error, labels is already disabled!"
@@ -145,11 +76,12 @@ if [[ $2 = "" ]]
   exit
   else
   {
-  cd ~/ehtsh
-  mkdir .disabled
-  mv ehtsh .disabled
-  cp etc/ehtsh ~/ehtsh
-  chmod +x ~/ehtsh/ehtsh
+  mkdir etc/.disabled
+  mv ehtsh etc/.disabled
+  cp etc/ehtsh .
+  cp etc/.disabled/ehtsh etc
+  rm -rf etc/.disabled
+  chmod +x ehtsh
   } &> /dev/null
   sleep 3
   echo -e "Success, labels disabled!"
@@ -168,11 +100,12 @@ if [[ $2 = "" ]]
   exit
   else
   {
-  cd ~/ehtsh
-  rm ehtsh
-  mv .disabled/ehtsh ~/ehtsh
-  rm -rf .disabled
-  chmod +x ~/ehtsh/ehtsh
+  mkdir etc/.disabled
+  mv ehtsh etc/.disabled
+  cp etc/ehtsh .
+  cp etc/.disabled/ehtsh etc
+  rm -rf etc/.disabled
+  chmod +x ehtsh
   } &> /dev/null
   sleep 3
   echo -e "Success, labels enabled!"
