@@ -22,6 +22,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+YS="\033[1;33m"
+CE="\033[0m"
+RS="\033[1;31m"
+
 if [[ "$1" = "--update" || "$1" = "-u" ]]
 then
 if [[ -d /data/data/com.termux ]]
@@ -58,7 +62,7 @@ sleep 1
 exit
 fi
 sleep 1
-echo -e "["$YS"inf"$CE"] "$YS" Installing update..."$CE""
+echo -e "["$YS"inf"$CE"] "$YS"Installing update..."$CE""
 {
 cd ~
 cd ~/ehtsh
@@ -76,7 +80,7 @@ chmod +x install.sh
 fi
 cd ~
 } &> /dev/null
-echo -e "["$YS"inf"$CE"] "$YS" Successfully updated..."$CE""
+echo -e "["$YS"inf"$CE"] "$YS"Successfully updated..."$CE""
 sleep 1
 exit
 fi
