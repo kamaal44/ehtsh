@@ -52,7 +52,6 @@ then
 chmod +x bin/ehtsh
 bin/ehtsh -u
 exit
-fi
 
 elif [[ "$1" = "--labels" || "$1" = "-l" ]]
 then
